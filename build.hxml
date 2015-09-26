@@ -1,4 +1,4 @@
 -cp src
 -main Index
 -lib thx.semver
--neko /usr/local/apache2/htdocs/repo/index.n
+-neko index.n
