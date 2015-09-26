@@ -1,3 +1,4 @@
+import cmd.Cmd;
 import haxe.web.Dispatch;
 import neko.Web.*;
 
@@ -16,20 +17,20 @@ class Index
 		
 		var uri = getURI().substring("/repo".length);
 		
-		try
-		{
+		//try
+		//{
 			Dispatch.run(uri, getParams(), api);
-		}
-		catch(ex:Dynamic)
-		{
-			neko.Lib.println("Invalid url");
-		}
+		//}
+		//catch(ex:Dynamic)
+		//{
+		//	neko.Lib.println("Invalid url");
+		//}
 	}
 	
 	public static function setup():Void
 	{
 		init = true;
-		serverData = new ServerData();
 		api = new Dispatchers.ApiDispatch();
+		//Cmd.quiet = true;
 	}
 }

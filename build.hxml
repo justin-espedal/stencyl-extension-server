@@ -1,4 +1,6 @@
 -cp src
+-cp ../stencyl-repository-manager/src
 -main Index
+-lib cmd
 -lib thx.semver
 -neko index.n

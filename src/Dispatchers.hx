@@ -1,3 +1,6 @@
+import cmd.Cmd;
+import cmd.Cmd.*;
+
 import haxe.web.Dispatch;
 import neko.Lib.*;
 
@@ -66,14 +69,16 @@ class ExtensionTypeDispatch
 	
 	function doDefault(extensionID:String, d:Dispatch)
 	{
-		extensionDispatch.extension = ServerData.getExtension(type, extensionID);
+		extensionDispatch.extension = {"type":type, "name":extensionID};
 		d.dispatch(extensionDispatch);
 	}
 	
 	function doList()
 	{
-		var obj = { "extensions": ServerData.getExtensions(type) };
-		println(stringify(obj));
+		Stencylrm.listExtensions(["toolset", "-json"]);
+		//cmd("srm", ["list", type, "-json"]);
+		//var obj = { "extensions": ServerData.getExtensions(type) };
+		//println(stringify(obj));
 	}
 }
 
@@ -89,6 +94,8 @@ class ExtensionDispatch
 	
 	function doLatest(withStencylVersion:String)
 	{
+		Stencylrm.listVersions([extension.type, extension.name, "-l", "-json"]);
+		/*
 		var latest = null;
 		var stencylVersion:StencylVersion = withStencylVersion;
 		
@@ -101,6 +108,7 @@ class ExtensionDispatch
 		}
 		
 		println(stringify(latest));
+		*/
 	}
 	
 	function doVersions(d:Dispatch)
@@ -126,12 +134,15 @@ class VersionListDispatch
 	
 	function doDefault()
 	{
-		var obj = { "versions": extension.versions };
-		println(stringify(obj));
+		Stencylrm.listVersions([extension.type, extension.name, "-json"]);
+		//var obj = { "versions": extension.versions };
+		//println(stringify(obj));
 	}
 	
 	function doFrom(fromVersion:String)
 	{
+		Stencylrm.listVersions([extension.type, extension.name, "-f", fromVersion, "-json"]);
+		/*
 		var latest = null;
 		var list = [];
 		var fromSem:thx.semver.Version = fromVersion;
@@ -146,6 +157,7 @@ class VersionListDispatch
 		
 		var obj = { "versions": list };
 		println(stringify(obj));
+		*/
 	}
 }
 
