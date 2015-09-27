@@ -112,9 +112,13 @@ class ExtensionDispatch
 		Stencylrm.listVersions(passArgs);
 	}
 	
-	function doGet(version:String)
+	function doGet(object:String)
 	{
-		neko.Web.redirect('http://www.polydes.com/get/${extension.type}/${extension.name}/$version.zip');
+		var realPath = Stencylrm.getPathString(extension.type, extension.name, object);
+		var redirectPrefix = 'http://www.polydes.com/get/';
+		var redirectPath = redirectPrefix + realPath.substring(realPath.indexOf(extension.type));
+		neko.Web.redirect(redirectPath);
+		//'http://www.polydes.com/get/${extension.type}/${extension.name}/$version.zip';
 	}
 }
 
