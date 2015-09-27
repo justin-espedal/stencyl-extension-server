@@ -76,45 +76,40 @@ class ExtensionTypeDispatch
 	function doList()
 	{
 		Stencylrm.listExtensions(["toolset", "-json"]);
-		//cmd("srm", ["list", type, "-json"]);
-		//var obj = { "extensions": ServerData.getExtensions(type) };
-		//println(stringify(obj));
 	}
 }
 
 class ExtensionDispatch
 {
 	public var extension:Extension;
-	public var versionListDispatch:VersionListDispatch;
 	
 	public function new()
 	{
-		versionListDispatch = new VersionListDispatch();
 	}
 	
-	function doLatest(withStencylVersion:String)
+	function doVersions(args:{stencyl:Null<String>, dep:Null<String>, latest:Null<Bool>, format:Null<String>, from:Null<String>})
 	{
-		Stencylrm.listVersions([extension.type, extension.name, "-l", "-json"]);
-		/*
-		var latest = null;
-		var stencylVersion:StencylVersion = withStencylVersion;
-		
-		for(version in extension.versions)
+		var passArgs = [extension.type, extension.name];
+		if(args.stencyl != null)
 		{
-			if((version.requires:Int) > (stencylVersion:Int))
-				break;
-			
-			latest = version;
+			passArgs.push("-s");
+			passArgs.push(args.stencyl);
 		}
-		
-		println(stringify(latest));
-		*/
-	}
-	
-	function doVersions(d:Dispatch)
-	{
-		versionListDispatch.extension = extension;
-		d.dispatch(versionListDispatch);
+		if(args.dep != null)
+		{
+			passArgs.push("-d");
+			passArgs.push(args.dep);
+		}
+		if(args.latest != null && args.latest)
+			passArgs.push("-l");
+		if(args.format != null)
+			passArgs.push('-${args.format}');
+		if(args.from != null)
+		{
+			passArgs.push("-f");
+			passArgs.push(args.from);
+		}
+		Stencylrm.listVersions(passArgs);
 	}
 	
 	function doGet(version:String)
@@ -123,54 +118,11 @@ class ExtensionDispatch
 	}
 }
 
-class VersionListDispatch
-{
-	public var extension:Extension;
-	
-	public function new()
-	{
-		
-	}
-	
-	function doDefault()
-	{
-		Stencylrm.listVersions([extension.type, extension.name, "-json"]);
-		//var obj = { "versions": extension.versions };
-		//println(stringify(obj));
-	}
-	
-	function doFrom(fromVersion:String)
-	{
-		Stencylrm.listVersions([extension.type, extension.name, "-f", fromVersion, "-json"]);
-		/*
-		var latest = null;
-		var list = [];
-		var fromSem:thx.semver.Version = fromVersion;
-		
-		for(version in extension.versions)
-		{
-			if(version.number <= fromVersion)
-				continue;
-			
-			list.push(version);
-		}
-		
-		var obj = { "versions": list };
-		println(stringify(obj));
-		*/
-	}
-}
-
 /*
-Have a "repository" string in attributes. ExtensionManager can send it data to check if an update is available.
-
-Extension-Repo: http://some-site.com/stencyl-extensions/
-
 /access/
 /{api version}/{extension type}/list/ -> see extensions for type
-/{api version}/{extension type}/{id}/latest/{stencyl-version} -> get info for latest version of extension
-/{api version}/{extension type}/{id}/versions/ -> get info for all versions of extension
-/{api version}/{extension type}/{id}/versions/from/{version}
-/{api version}/{extension type}/{id}/get/xxx.zip
-/get/type/id/v.zip
+/{api version}/{extension type}/{id}/versions?latest=true&format=json&stencyl={b8670} -> get info for latest version of extension
+/{api version}/{extension type}/{id}/versions?format=json -> get info for all versions of extension
+/{api version}/{extension type}/{id}/versions?format=json&from={1.6.0}
+/{api version}/{extension type}/{id}/get/{1.0.0}
 */
