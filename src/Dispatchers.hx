@@ -75,7 +75,7 @@ class ExtensionTypeDispatch
 	
 	function doList()
 	{
-		Stencylrm.listExtensions(["toolset", "-json"]);
+		Stencylrm.listExtensions([type, "-json"]);
 	}
 }
 
